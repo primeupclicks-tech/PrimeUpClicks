@@ -12,7 +12,6 @@ import {
   Box,
   IconButton,
   Drawer,
-  List,
   ListItem,
   ListItemText,
   ListItemButton,
@@ -26,9 +25,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import Image from "next/image";
 
 const navItems = [
-  { name: 'Eventos', href: '/eventos' },
-  { name: 'Produtos', href: '/produtos' },
-  { name: 'Sobre', href: '/sobre' },
+  { name: 'Buscar Fotos', href: '/fotos' },
 ];
 
 export default function Header() {
