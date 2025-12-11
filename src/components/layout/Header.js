@@ -152,7 +152,7 @@ export default function Header() {
               {/* CADASTRAR */}
               <Button
                 component={Link}
-                href="/cadastrar"
+                href="/register"
                 variant="contained"
                 startIcon={<PersonAddIcon />}
                 sx={{
@@ -211,7 +211,7 @@ export default function Header() {
             <ListItemText primary="Login" />
           </ListItemButton>
 
-          <ListItemButton component={Link} href="/cadastrar" onClick={handleDrawerToggle}>
+          <ListItemButton component={Link} href="/register" onClick={handleDrawerToggle}>
             <PersonAddIcon sx={{ mr: 1 }} />
             <ListItemText primary="Cadastrar" />
           </ListItemButton>
