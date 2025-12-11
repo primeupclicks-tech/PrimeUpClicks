@@ -25,7 +25,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import Image from "next/image";
 
 const navItems = [
-  { name: 'Buscar Fotos', href: '/fotos' },
+  { name: 'Eventos', href: '/eventos' },
 ];
 
 export default function Header() {

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { 
   Container, 
@@ -30,8 +31,6 @@ import {
 import {
   Search as SearchIcon,
   ShoppingCart as ShoppingCartIcon,
-  Favorite as FavoriteIcon,
-  FavoriteBorder as FavoriteBorderIcon,
   PhotoCamera as PhotoCameraIcon,
   ArrowForward as ArrowForwardIcon,
   FilterList as FilterListIcon,
@@ -70,7 +69,6 @@ const pulseAnimation = keyframes`
 
 export default function PhotoSalesPage() {
   const [photos, setPhotos] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -136,7 +134,6 @@ export default function PhotoSalesPage() {
           downloads: 567,
           url: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
           createdAt: '2024-03-10',
-          isFavorite: true
         },
         {
           id: '4',
@@ -218,24 +215,11 @@ export default function PhotoSalesPage() {
         }
       ];
 
-      const mockCategories = [
-        { id: '1', name: 'Natureza', count: 1245, icon: '🌿' },
-        { id: '2', name: 'Cidade', count: 892, icon: '🏙️' },
-        { id: '3', name: 'Pessoas', count: 1567, icon: '👥' },
-        { id: '4', name: 'Viagens', count: 2341, icon: '✈️' },
-        { id: '5', name: 'Arte', count: 423, icon: '🎨' },
-        { id: '6', name: 'Tecnologia', count: 678, icon: '💻' },
-        { id: '7', name: 'Negócios', count: 945, icon: '💼' },
-        { id: '8', name: 'Alimentos', count: 567, icon: '🍽️' },
-        { id: '9', name: 'Esportes', count: 723, icon: '⚽' },
-        { id: '10', name: 'Animais', count: 1156, icon: '🐾' }
-      ];
 
       // Simular delay de carregamento
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       setPhotos(mockPhotos);
-      setCategories(mockCategories);
       setLoading(false);
     } catch (err) {
       console.error('Erro ao carregar dados:', err);
@@ -244,13 +228,6 @@ export default function PhotoSalesPage() {
     }
   };
 
-  const toggleFavorite = (photoId) => {
-    setPhotos(prev => prev.map(photo => 
-      photo.id === photoId 
-        ? { ...photo, isFavorite: !photo.isFavorite }
-        : photo
-    ));
-  };
 
   const addToCart = (photo) => {
     setCartItems(prev => [...prev, photo]);
@@ -327,6 +304,7 @@ export default function PhotoSalesPage() {
   }
 
   return (
+    
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f9f9f9' }}>
       {/* AppBar */}
       <AppBar position="sticky" sx={{ 
@@ -341,68 +319,84 @@ export default function PhotoSalesPage() {
         background: 'linear-gradient(135deg, #0d0b1e 0%, #2e1534 30%, #4a1b5a 100%)',
         color: 'white',
         overflow: 'hidden',
-        py: { xs: 6, md: 10 },
-        mb: 6
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        mb: 0,
+        py: 0
       }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: "url('/particles.svg')",
+            opacity: 0.08,
+            pointerEvents: 'none'
+          }}
+        />
         <Container maxWidth="xl">
-  <Grid 
-    container 
-    spacing={4} 
-    alignItems="center"
-    justifyContent="center"
-    sx={{ textAlign: { xs: 'center', md: 'left' } }}
-  >
-    <Grid item xs={12} md={6}>
-      <Box sx={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: { xs: 'center', md: 'center' },
-        justifyContent: 'center',
-        height: '100%'
-      }}>
-        <Typography 
-          variant="h1" 
-          sx={{ 
-            fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
-            fontWeight: 800,
-            background: 'linear-gradient(90deg, #ffffff 0%, #e1bee7 100%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            mb: 2,
-            lineHeight: 1.2,
-            textAlign: { xs: 'center', md: 'center' }
-          }}
-        >
-          Descubra Fotos Incríveis
-        </Typography>
-        
-        <Typography 
-          variant="h5" 
-          sx={{ 
-            maxWidth: '600px', 
-            color: 'rgba(255,255,255,0.9)',
-            fontSize: { xs: '1rem', md: '1.3rem' },
-            mb: 4,
-            fontWeight: 300,
-            lineHeight: 1.6,
-            textAlign: { xs: 'center', md: 'center' }
-          }}
-        >
-          Suas fotos com alta qualidade e preços baixos. 
-          <br />  
-          Para dar um 
-          <span style={{ color: '#ce93d8', fontWeight: 500 }}> UP </span>
-          nas suas rede sociais
-        </Typography>
-        
-        <Box sx={{ 
-          display: 'flex', 
-          gap: 2, 
-          flexWrap: 'wrap',
-          justifyContent: { xs: 'center', md: 'center' }
-        }}>
+          <Grid 
+            container 
+            spacing={4} 
+            alignItems="center"
+            justifyContent="center"
+            sx={{ textAlign: { xs: 'center', md: 'left' } }}
+          >
+            <Grid item xs={12} md={6}>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: { xs: 'center', md: 'center' },
+                justifyContent: 'center',
+                height: '100%'
+              }}>
+                <Typography 
+                  variant="h1" 
+                  sx={{ 
+                    fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
+                    fontWeight: 800,
+                    background: 'linear-gradient(90deg, #ffffff 0%, #e1bee7 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    color: 'transparent',
+                    mb: 2,
+                    lineHeight: 1.2,
+                    textAlign: { xs: 'center', md: 'center' }
+                  }}
+                >
+                  Descubra Fotos Incríveis
+                </Typography>
+                
+                <Typography 
+                  variant="h5" 
+                  sx={{ 
+                    maxWidth: '600px', 
+                    color: 'rgba(255,255,255,0.9)',
+                    fontSize: { xs: '1rem', md: '1.3rem' },
+                    mb: 4,
+                    fontWeight: 300,
+                    lineHeight: 1.6,
+                    textAlign: { xs: 'center', md: 'center' }
+                  }}
+                >
+                  Suas fotos com alta qualidade e preços baixos. 
+                  <br />  
+                  Para dar um 
+                  <span style={{ color: '#ce93d8', fontWeight: 500 }}> UP </span>
+                  nas suas rede sociais
+                </Typography>
+                
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 2, 
+            flexWrap: 'wrap',
+            justifyContent: { xs: 'center', md: 'center' }
+          }}>
           <Button 
+            onClick={() => {
+            const target = document.getElementById("galeria");
+            target?.scrollIntoView({ behavior: "smooth" });
+          }}
             variant="contained" 
             size="large"
             startIcon={<ExploreIcon />}
@@ -422,51 +416,6 @@ export default function PhotoSalesPage() {
           >
             Explorar Galeria
           </Button>
-        </Box>
-      </Box>
-    </Grid>
-    
-    <Grid item xs={12} md={6}>
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%'
-      }}>
-        <Box sx={{ 
-          position: 'relative',
-          borderRadius: 4,
-          overflow: 'hidden',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-          maxWidth: '600px',
-          width: '100%'
-        }}>
-          <CardMedia
-            component="img"
-            image="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-            alt="Fotógrafo profissional"
-            sx={{ 
-              width: '100%',
-              height: { xs: '300px', md: '400px' },
-              objectFit: 'cover'
-            }}
-          />
-          <Box sx={{ 
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            background: 'linear-gradient(transparent, rgba(123, 31, 162, 0.9))',
-            p: 3,
-            color: 'white'
-          }}>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              Fotos do Mês
-            </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.9 }}>
-              Por João Silva
-            </Typography>
-          </Box>
         </Box>
       </Box>
     </Grid>
@@ -494,8 +443,8 @@ export default function PhotoSalesPage() {
         </Box>
       </Box>
 
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        {/* Filtros e Ordenação */}
+      <Container id="galeria" maxWidth="xl" sx={{ py: 4 }}>
+        {/* pesquisa */}
         <Card sx={{ 
           mb: 4, 
           p: 3, 
@@ -503,11 +452,10 @@ export default function PhotoSalesPage() {
           background: 'linear-gradient(145deg, #ffffff 0%, #f9f0fa 100%)',
           border: '1px solid rgba(123, 31, 162, 0.1)'
         }}>
-          <Grid container spacing={3} alignItems="center">
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                placeholder="Buscar fotos, tags, autores..."
+                placeholder="Buscar fotos, eventos, fotografos..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 variant="outlined"
@@ -527,78 +475,6 @@ export default function PhotoSalesPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Categoria</InputLabel>
-                <Select
-                  value={selectedCategory}
-                  label="Categoria"
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  sx={{
-                    backgroundColor: '#f9f0fa',
-                    '&:hover': {
-                      backgroundColor: '#f3e5f5'
-                    }
-                  }}
-                >
-                  <MenuItem value="all">Todas as Categorias</MenuItem>
-                  {categories.map(cat => (
-                    <MenuItem key={cat.id} value={cat.name}>
-                      {cat.icon} {cat.name} ({cat.count})
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Ordenar por</InputLabel>
-                <Select
-                  value={sortBy}
-                  label="Ordenar por"
-                  onChange={(e) => setSortBy(e.target.value)}
-                  sx={{
-                    backgroundColor: '#f9f0fa',
-                    '&:hover': {
-                      backgroundColor: '#f3e5f5'
-                    }
-                  }}
-                >
-                  <MenuItem value="popular">
-                    <TrendingUpIcon sx={{ fontSize: 16, mr: 1 }} /> Mais Populares
-                  </MenuItem>
-                  <MenuItem value="newest">
-                    <NewReleasesIcon sx={{ fontSize: 16, mr: 1 }} /> Mais Recentes
-                  </MenuItem>
-                  <MenuItem value="price-low">
-                    <AttachMoneyIcon sx={{ fontSize: 16, mr: 1 }} /> Preço: Menor
-                  </MenuItem>
-                  <MenuItem value="price-high">
-                    <AttachMoneyIcon sx={{ fontSize: 16, mr: 1 }} /> Preço: Maior
-                  </MenuItem>
-                  <MenuItem value="rating">
-                    <WhatshotIcon sx={{ fontSize: 16, mr: 1 }} /> Melhor Avaliadas
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-
-          <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            <Chip 
-              label="Todas" 
-              onClick={() => setSelectedCategory('all')}
-              color={selectedCategory === 'all' ? 'secondary' : 'default'}
-            />
-            {categories.slice(0, 6).map(cat => (
-              <Chip
-                key={cat.id}
-                label={`${cat.icon} ${cat.name}`}
-                onClick={() => setSelectedCategory(cat.name)}
-                color={selectedCategory === cat.name ? 'secondary' : 'default'}
-              />
-            ))}
-          </Box>
         </Card>
 
         {/* Galeria de Fotos */}
@@ -650,20 +526,6 @@ export default function PhotoSalesPage() {
                     display: 'flex',
                     gap: 1 
                   }}>
-                    <IconButton 
-                      size="small"
-                      onClick={() => toggleFavorite(photo.id)}
-                      sx={{ 
-                        backgroundColor: 'rgba(255,255,255,0.9)',
-                        '&:hover': { backgroundColor: 'white' }
-                      }}
-                    >
-                      {photo.isFavorite ? (
-                        <FavoriteIcon sx={{ color: '#e91e63', fontSize: 20 }} />
-                      ) : (
-                        <FavoriteBorderIcon sx={{ fontSize: 20 }} />
-                      )}
-                    </IconButton>
                   </Box>
                 </Box>
 
@@ -700,34 +562,6 @@ export default function PhotoSalesPage() {
                       {photo.author}
                     </Typography>
                   </Box>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <Rating 
-                      value={photo.rating} 
-                      size="small" 
-                      readOnly 
-                      precision={0.5}
-                      sx={{ color: '#ff9800' }}
-                    />
-                    <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
-                      ({photo.downloads} downloads)
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                    {photo.tags.slice(0, 3).map((tag, index) => (
-                      <Chip
-                        key={index}
-                        label={tag}
-                        size="small"
-                        sx={{ 
-                          backgroundColor: '#f3e5f5',
-                          color: '#7b1fa2',
-                          fontSize: '0.7rem'
-                        }}
-                      />
-                    ))}
-                  </Box>
                 </CardContent>
 
                 <CardActions sx={{ 
@@ -745,13 +579,9 @@ export default function PhotoSalesPage() {
                     }}>
                       R$ {photo.price.toFixed(2)}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                      ou {photo.credits} créditos
-                    </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton size="small" sx={{ color: '#9c27b0' }}>
-                      <InfoIcon />
                     </IconButton>
                     <Button
                       variant="contained"
@@ -821,6 +651,8 @@ export default function PhotoSalesPage() {
             Sem burocracia. Rápido, fácil e seguro!
           </Typography>
           <Button
+            component={Link}
+            href="/register"
             variant="contained"
             size="large"
             startIcon={<PersonAddIcon/>}
