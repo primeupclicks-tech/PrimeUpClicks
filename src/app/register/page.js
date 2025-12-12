@@ -27,6 +27,7 @@ import {
   ArrowForward,
   Person,
 } from '@mui/icons-material';
+import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
   const theme = useTheme();
@@ -34,30 +35,62 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
+  //dados
   const [formData, setFormData] = useState({
   nome_completo: '',
   email: '',
-  password: '',
-  confirmPassword: '',
+  senha: '',
+  confirmar_senha: ''
 });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Cadastro:", formData);
-    if (formData.password !== formData.confirmPassword) {
-     setOpenAlert(true);
-    return;
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value
+  });
+};
+
+const router = useRouter()
+
+  const handleRegister = async (e) => {
+    e.preventDefault()
+
+    const usuario = { 
+  nome_completo: formData.nome_completo, 
+  email: formData.email, 
+  senha: formData.senha, 
+  confirmar_senha: formData.confirmar_senha 
+};
+
+if (formData.senha !== formData.confirmar_senha) {
+  setAlertMessage("As senhas não coincidem!");
+  setOpenAlert(true);
+  return;
 }
-  };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+    try {
+      const response = await fetch('/api/autenticacao/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(usuario)
+      })
 
+      if (response.ok) {
+        const data = await response.json()
+        const id = data.id
+        router.push(`/perfil/${id}`)
+      } else {
+        const errorData = await response.json()
+        setAlertMessage(`Erro ao cadastrar usuário`)
+        setOpenAlert(true);
+      }
+    } catch (error) {
+      setAlertMessage("Erro ao conectar ao servidor.");
+      setOpenAlert(true);
+    }
+  }
   return (
     <Box
       sx={{
@@ -132,7 +165,7 @@ export default function RegisterPage() {
               </Box>
 
               {/* FORMULÁRIO */}
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleRegister}>
                 {/* Nome Completo */}
                 <TextField
                   fullWidth
@@ -174,9 +207,9 @@ export default function RegisterPage() {
                 <TextField
                   fullWidth
                   label="Senha"
-                  name="password"
+                  name="senha"
                   type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
+                  value={formData.senha}
                   onChange={handleChange}
                   required
                   sx={{ mb: 3 }}
@@ -198,9 +231,9 @@ export default function RegisterPage() {
                 <TextField
                     fullWidth
                     label="Confirmar Senha"
-                    name="confirmPassword"
+                    name="confirmar_senha"
                     type={showConfirmPassword ? 'text' : 'password'}
-                    value={formData.confirmPassword}
+                    value={formData.confirmar_senha}
                     onChange={handleChange}
                     required
                     sx={{ mb: 3 }}
@@ -230,7 +263,7 @@ export default function RegisterPage() {
                         anchorOrigin={{ vertical: "top", horizontal: "center" }}
                     >
                         <Alert onClose={() => setOpenAlert(false)} severity="error" variant="filled">
-                        As senhas não coincidem!
+                        {alertMessage}
                         </Alert>
                     </Snackbar>
 
