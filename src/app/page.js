@@ -33,6 +33,7 @@ import {
   ShoppingCart as ShoppingCartIcon,
   PhotoCamera as PhotoCameraIcon,
   ArrowForward as ArrowForwardIcon,
+  ArrowUpward as ArrowUpwardIcon, // ← Adicione esta linha
   FilterList as FilterListIcon,
   Sort as SortIcon,
   TrendingUp as TrendingUpIcon,
@@ -62,9 +63,9 @@ const floatAnimation = keyframes`
 `;
 
 const pulseAnimation = keyframes`
-  0% { box-shadow: 0 0 0 0 ${alpha('#7b1fa2', 0.4)}; }
-  70% { box-shadow: 0 0 0 10px ${alpha('#7b1fa2', 0)}; }
-  100% { box-shadow: 0 0 0 0 ${alpha('#7b1fa2', 0)}; }
+  0% { box-shadow: 0 0 0 0 ${alpha('#0055b1ff', 0.4)}; }
+  70% { box-shadow: 0 0 0 10px ${alpha('#0055b1ff', 0)}; }
+  100% { box-shadow: 0 0 0 0 ${alpha('#0055b1ff', 0)}; }
 `;
 
 export default function PhotoSalesPage() {
@@ -148,7 +149,7 @@ export default function PhotoSalesPage() {
           category: 'Viagens',
           tags: ['praia', 'tropical', 'férias', 'natureza'],
           downloads: 1342,
-          url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+          url: 'https://images.unsplash.com/phone-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
           createdAt: '2024-01-30'
         },
         {
@@ -215,7 +216,6 @@ export default function PhotoSalesPage() {
         }
       ];
 
-
       // Simular delay de carregamento
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -227,7 +227,6 @@ export default function PhotoSalesPage() {
       setLoading(false);
     }
   };
-
 
   const addToCart = (photo) => {
     setCartItems(prev => [...prev, photo]);
@@ -261,7 +260,6 @@ export default function PhotoSalesPage() {
       }
     });
 
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -274,14 +272,14 @@ export default function PhotoSalesPage() {
         alignItems: 'center', 
         justifyContent: 'center', 
         minHeight: '80vh',
-        background: 'linear-gradient(135deg, #f5f3f7 0%, #ffffff 100%)'
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%)'
       }}>
         <Box sx={{ position: 'relative' }}>
           <CircularProgress 
             size={80} 
             thickness={2}
             sx={{ 
-              color: '#9c27b0',
+              color: '#0055b1ff',
               animation: `${pulseAnimation} 2s infinite`
             }} 
           />
@@ -292,11 +290,11 @@ export default function PhotoSalesPage() {
               left: '50%',
               transform: 'translate(-50%, -50%)',
               fontSize: 30,
-              color: '#9c27b0'
+              color: '#0055b1ff'
             }} 
           />
         </Box>
-        <Typography variant="h6" sx={{ mt: 3, color: '#7b1fa2', fontWeight: 500 }}>
+        <Typography variant="h6" sx={{ mt: 3, color: '#0055b1ff', fontWeight: 500 }}>
           Carregando...
         </Typography>
       </Box>
@@ -304,19 +302,11 @@ export default function PhotoSalesPage() {
   }
 
   return (
-    
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f9f9f9' }}>
-      {/* AppBar */}
-      <AppBar position="sticky" sx={{ 
-        background: 'linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%)',
-        boxShadow: '0 4px 20px rgba(123, 31, 162, 0.2)'
-      }}>
-
-      </AppBar>
       {/* Hero Section */}
       <Box sx={{ 
         position: 'relative',
-        background: 'linear-gradient(135deg, #0d0b1e 0%, #2e1534 30%, #4a1b5a 100%)',
+        background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
         color: 'white',
         overflow: 'hidden',
         minHeight: '100vh',
@@ -340,7 +330,7 @@ export default function PhotoSalesPage() {
             spacing={4} 
             alignItems="center"
             justifyContent="center"
-            sx={{ textAlign: { xs: 'center', md: 'left' } }}
+            sx={{ textAlign: { xs: 'center', md: 'center' } }}
           >
             <Grid item xs={12} md={6}>
               <Box sx={{ 
@@ -350,77 +340,162 @@ export default function PhotoSalesPage() {
                 justifyContent: 'center',
                 height: '100%'
               }}>
-                <Typography 
-                  variant="h1" 
-                  sx={{ 
-                    fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
-                    fontWeight: 800,
-                    background: 'linear-gradient(90deg, #ffffff 0%, #e1bee7 100%)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    color: 'transparent',
-                    mb: 2,
-                    lineHeight: 1.2,
-                    textAlign: { xs: 'center', md: 'center' }
-                  }}
-                >
-                  Descubra Fotos Incríveis
-                </Typography>
+               <Box sx={{ 
+  maxWidth: '600px', 
+  mb: 4,
+  textAlign: { xs: 'center', md: 'center' },
+  position: 'relative',
+}}>
+  {/* Logo animada com seta */}
+  <Box sx={{ 
+    display: 'inline-flex', 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    mb: 3,
+    gap: 1,
+    px: 3,
+    py: 1.5,
+    background: 'linear-gradient(135deg, rgba(0, 87, 177, 0.15), rgba(0, 7, 112, 0.25))',
+    borderRadius: '16px',
+    border: '1px solid rgba(102, 179, 255, 0.3)',
+    boxShadow: '0 8px 25px rgba(0, 87, 177, 0.2)',
+    position: 'relative',
+    overflow: 'hidden',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '3px',
+      background: 'linear-gradient(90deg, #0055b1ff, #000770ff)',
+    }
+  }}>
+    <Box sx={{
+      animation: `${floatAnimation} 2s ease-in-out infinite`,
+      mr: 1,
+    }}>
+      <ArrowUpwardIcon sx={{ 
+        fontSize: { xs: '1.8rem', md: '2.2rem' },
+        color: '#ffffff',
+        filter: 'drop-shadow(0 2px 4px rgba(0,87,177,0.4))',
+      }} />
+    </Box>
+    
+    <Typography
+      variant="h4"
+      sx={{
+        fontSize: { xs: '1.6rem', md: '2rem' },
+        fontWeight: 800,
+        lineHeight: 1,
+        background: '#ffffff',
+        backgroundClip: 'text',
+        WebkitBackgroundClip: 'text',
+        color: 'transparent',
+      }}
+    >
+      PrimeUp Clicks
+    </Typography>
+  </Box>
+  
+  <Typography
+    variant="h6"
+    sx={{
+      fontSize: { xs: '1rem', md: '1.3rem' },
+      fontWeight: 400,
+      lineHeight: 1.7,
+      color: 'rgba(255,255,255,0.9)',
+      mb: 2,
+    }}
+  >
+    <Box
+      component="span"
+      sx={{
+        fontWeight: 600,
+        background: '#ffffff',
+        backgroundClip: 'text',
+        WebkitBackgroundClip: 'text',
+        color: 'transparent',
+      }}
+    >
+      Transforme suas redes sociais
+    </Box>
+    {' '}com fotos que realmente{' '}
+    <Box
+      component="span"
+      sx={{
+        display: 'inline-block',
+        fontWeight: 700,
+        color: '#ffffff',
+        position: 'relative',
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: '-5px',
+          left: '10%',
+          right: '10%',
+          height: '3px',
+          background: '#ffffff',
+          borderRadius: '2px',
+        }
+      }}
+    >
+      impressionam
+    </Box>
+  </Typography>
+  
+  <Typography
+    variant="body1"
+    sx={{
+      fontSize: '1rem',
+      fontWeight: 300,
+      lineHeight: 1.8,
+      color: '#ffffff',
+      fontStyle: 'italic',
+      maxWidth: '500px',
+      mx: 'auto',
+      mt: 1,
+    }}
+  >
+    "A plataforma que eleva sua presença digital"
+  </Typography>
+</Box>
                 
-                <Typography 
-                  variant="h5" 
-                  sx={{ 
-                    maxWidth: '600px', 
-                    color: 'rgba(255,255,255,0.9)',
-                    fontSize: { xs: '1rem', md: '1.3rem' },
-                    mb: 4,
-                    fontWeight: 300,
-                    lineHeight: 1.6,
-                    textAlign: { xs: 'center', md: 'center' }
-                  }}
-                >
-                  Suas fotos com alta qualidade e preços baixos. 
-                  <br />  
-                  Para dar um 
-                  <span style={{ color: '#ce93d8', fontWeight: 500 }}> UP </span>
-                  nas suas rede sociais
-                </Typography>
-                
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 2, 
-            flexWrap: 'wrap',
-            justifyContent: { xs: 'center', md: 'center' }
-          }}>
-          <Button 
-            onClick={() => {
-            const target = document.getElementById("galeria");
-            target?.scrollIntoView({ behavior: "smooth" });
-          }}
-            variant="contained" 
-            size="large"
-            startIcon={<ExploreIcon />}
-            sx={{ 
-              backgroundColor: 'white', 
-              color: '#7b1fa2',
-              fontWeight: 700,
-              borderRadius: 2,
-              px: 4,
-              py: 1.5,
-              '&:hover': {
-                backgroundColor: '#f3e5f5',
-                transform: 'translateY(-2px)',
-                boxShadow: '0 8px 25px rgba(255,255,255,0.3)'
-              }
-            }}
-          >
-            Explorar Galeria
-          </Button>
-        </Box>
-      </Box>
-    </Grid>
-  </Grid>
-</Container>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 2, 
+                  flexWrap: 'wrap',
+                  justifyContent: { xs: 'center', md: 'center' }
+                }}>
+                  <Button 
+                    onClick={() => {
+                      const target = document.getElementById("galeria");
+                      target?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    variant="contained" 
+                    size="large"
+                    startIcon={<ExploreIcon />}
+                    sx={{ 
+                      backgroundColor: 'white', 
+                      color: '#0055b1ff',
+                      fontWeight: 700,
+                      borderRadius: 2,
+                      px: 4,
+                      py: 1.5,
+                      '&:hover': {
+                        backgroundColor: '#e6f2ff',
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 8px 25px rgba(255,255,255,0.3)'
+                      }
+                    }}
+                  >
+                    Explorar Galeria
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
 
         {/* Elementos decorativos */}
         <Box sx={{ 
@@ -430,7 +505,7 @@ export default function PhotoSalesPage() {
           animation: `${floatAnimation} 6s ease-in-out infinite`,
           opacity: 0.2
         }}>
-          <PhotoCameraIcon sx={{ fontSize: 80, transform: 'rotate(15deg)' }} />
+          <PhotoCameraIcon sx={{ fontSize: 80, transform: 'rotate(15deg)', color: '#66b3ff' }} />
         </Box>
         <Box sx={{ 
           position: 'absolute', 
@@ -439,11 +514,11 @@ export default function PhotoSalesPage() {
           animation: `${floatAnimation} 7s ease-in-out infinite 1s`,
           opacity: 0.15
         }}>
-          <PhotoCameraIcon sx={{ fontSize: 60, transform: 'rotate(-10deg)' }} />
+          <PhotoCameraIcon sx={{ fontSize: 60, transform: 'rotate(-10deg)', color: '#66b3ff' }} />
         </Box>
       </Box>
 
-      <Container id="galeria" maxWidth="xl" sx={{ py: 4 }}>
+       <Container id="galeria" maxWidth="xl" sx={{ py: 4 }}>
         {/* pesquisa */}
         <Card sx={{ 
           mb: 4, 
@@ -463,7 +538,7 @@ export default function PhotoSalesPage() {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon sx={{ color: '#9c27b0' }} />
+                      <SearchIcon sx={{ color: '#0055b1ff' }} />
                     </InputAdornment>
                   ),
                   sx: {
@@ -481,8 +556,8 @@ export default function PhotoSalesPage() {
         <Typography variant="h4" sx={{ 
           fontWeight: 700, 
           mb: 3, 
-          color: '#7b1fa2',
-          borderLeft: '4px solid #9c27b0',
+          color: '#0055b1ff',
+          borderLeft: '4px solid #0055b1ff',
           pl: 2
         }}>
           Galeria 
@@ -503,7 +578,7 @@ export default function PhotoSalesPage() {
                 flexDirection: 'column',
                 '&:hover': {
                   transform: 'translateY(-8px)',
-                  boxShadow: '0 16px 32px rgba(123, 31, 162, 0.2)'
+                  boxShadow: '0 16px 32px rgba(0, 85, 177, 0.15)'
                 }
               }}>
                 <Box sx={{ position: 'relative' }}>
@@ -526,6 +601,16 @@ export default function PhotoSalesPage() {
                     display: 'flex',
                     gap: 1 
                   }}>
+                    <Chip 
+                      label={photo.category}
+                      size="small"
+                      sx={{
+                        backgroundColor: '#0055b1ff',
+                        color: 'white',
+                        fontWeight: 500,
+                        fontSize: '0.7rem'
+                      }}
+                    />
                   </Box>
                 </Box>
 
@@ -535,7 +620,7 @@ export default function PhotoSalesPage() {
                     mb: 1,
                     fontSize: '1rem',
                     lineHeight: 1.4,
-                    color: '#2e1534'
+                    color: '#001a33'
                   }}>
                     {photo.title}
                   </Typography>
@@ -553,7 +638,7 @@ export default function PhotoSalesPage() {
                       width: 28, 
                       height: 28, 
                       mr: 1, 
-                      bgcolor: '#7b1fa2',
+                      bgcolor: '#0055b1ff',
                       fontSize: '0.875rem'
                     }}>
                       {photo.author.charAt(0)}
@@ -574,26 +659,24 @@ export default function PhotoSalesPage() {
                   <Box>
                     <Typography variant="h5" sx={{ 
                       fontWeight: 700, 
-                      color: '#9c27b0',
+                      color: '#0055b1ff',
                       lineHeight: 1
                     }}>
                       R$ {photo.price.toFixed(2)}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton size="small" sx={{ color: '#9c27b0' }}>
-                    </IconButton>
                     <Button
                       variant="contained"
                       size="small"
                       startIcon={<ShoppingCartIcon />}
                       onClick={() => addToCart(photo)}
                       sx={{
-                        backgroundColor: '#7b1fa2',
+                        backgroundColor: '#0055b1ff',
                         fontWeight: 600,
                         borderRadius: 2,
                         '&:hover': {
-                          backgroundColor: '#6a1b9a'
+                          backgroundColor: '#003063ff'
                         }
                       }}
                     >
@@ -610,11 +693,11 @@ export default function PhotoSalesPage() {
           <Box sx={{ 
             textAlign: 'center', 
             py: 8,
-            background: 'linear-gradient(135deg, #f9f0fa 0%, #f3e5f5 100%)',
+            background: 'linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%)',
             borderRadius: 3
           }}>
-            <PhotoCameraIcon sx={{ fontSize: 60, color: '#ce93d8', mb: 2 }} />
-            <Typography variant="h6" sx={{ color: '#7b1fa2', mb: 1 }}>
+            <PhotoCameraIcon sx={{ fontSize: 60, color: '#99ccff', mb: 2 }} />
+            <Typography variant="h6" sx={{ color: '#0055b1ff', mb: 1 }}>
               Nenhuma foto encontrada
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -629,7 +712,7 @@ export default function PhotoSalesPage() {
           py: 8,
           mt: 6,
           borderRadius: 3,
-          background: 'linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%)',
+          background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
           color: 'white',
           position: 'relative',
           overflow: 'hidden'
@@ -641,7 +724,7 @@ export default function PhotoSalesPage() {
             animation: `${floatAnimation} 8s ease-in-out infinite`,
             opacity: 0.1
           }}>
-            <PhotoCameraIcon sx={{ fontSize: 200 }} />
+            <PhotoCameraIcon sx={{ fontSize: 200, color: '#66b3ff' }} />
           </Box>
           
           <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, position: 'relative' }}>
@@ -658,14 +741,14 @@ export default function PhotoSalesPage() {
             startIcon={<PersonAddIcon/>}
             sx={{
               backgroundColor: 'white',
-              color: '#7b1fa2',
+              color: '#0055b1ff',
               fontWeight: 700,
               borderRadius: 2,
               px: 6,
               py: 1.5,
               fontSize: '1.1rem',
               '&:hover': {
-                backgroundColor: '#f3e5f5',
+                backgroundColor: '#e6f2ff',
                 transform: 'translateY(-2px)',
                 boxShadow: '0 8px 25px rgba(255,255,255,0.3)'
               }

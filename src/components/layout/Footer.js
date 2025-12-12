@@ -36,7 +36,7 @@ export default function Footer() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  };  
 
   return (
     <>
@@ -49,10 +49,10 @@ export default function Footer() {
             bottom: 24,
             right: 24,
             zIndex: 1000,
-            backgroundColor: 'rgba(106, 27, 154, 0.9)',
-            color: 'white',
+            background: "#0055b1ff",
+            color: 'white',   
             '&:hover': {
-              backgroundColor: '#8e24aa',
+              backgroundColor: '#0055b1ff',
               transform: 'translateY(-2px)',
             },
             transition: 'all 0.3s ease',
@@ -68,7 +68,7 @@ export default function Footer() {
       <Box
         component="footer"
         sx={{
-          background: "linear-gradient(135deg, #6a1b9a 0%, #8e24aa 50%, #ab47bc 100%)",
+          background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
           color: 'white',
           py: 8,
           mt: 'auto',
@@ -81,7 +81,7 @@ export default function Footer() {
             left: 0,
             right: 0,
             height: '4px',
-            background: 'linear-gradient(90deg, #ff9800, #ffeb3b, #4caf50)',
+            background: 'linear-gradient(90deg, #007bffff, #007bffff)',
           }
         }}
       >
@@ -148,15 +148,6 @@ export default function Footer() {
                   </Typography>
                 </Box>
               </Box>
-              
-              <Typography variant="body1" sx={{ 
-                mb: 3,
-                lineHeight: 1.8,
-                maxWidth: 500,
-                opacity: 0.9
-              }}>
-                A sua plataforma de fotos para dar um UP nas redes sociais. Garanta já!
-              </Typography>
             </Box>
 
             {/* Coluna direita - Contato */}
@@ -177,7 +168,7 @@ export default function Footer() {
                   content: '""',
                   width: 30,
                   height: 3,
-                  background: 'linear-gradient(90deg, #ff9800, #ffeb3b)',
+                  background: 'linear-gradient(90deg, #007bffff, #007bffff)',
                   borderRadius: 2,
                 }
               }}>
@@ -295,8 +286,8 @@ export default function Footer() {
                   borderBottom: '1px solid rgba(255,255,255,0.3)',
                   transition: 'all 0.3s ease',
                   '&:hover': {
-                    color: '#ffeb3b',
-                    borderBottomColor: '#ffeb3b',
+                    color: '#007bffff',
+                    borderBottomColor: '#007bffff',
                   }
                 }}
               >

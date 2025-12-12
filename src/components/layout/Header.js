@@ -50,7 +50,7 @@ export default function Header() {
  <AppBar
   position="static"
   sx={{
-    background: "linear-gradient(90deg, #6a1b9a, #8e24aa, #ab47bc)",
+    background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
     boxShadow: "0 4px 10px rgba(0,0,0,0.25)",
     position: 'relative',
     '&::after': {
@@ -60,126 +60,126 @@ export default function Header() {
       left: 0,
       right: 0,
       height: '4px',
-      background: 'linear-gradient(90deg, #ff9800, #ffeb3b, #4caf50)',
+      background: 'linear-gradient(90deg, #007bffff, #007bffff)',
     }
   }}
 >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ display: "flex", alignItems: "center", pt: 1, marginBottom: '15px'}}>
+  <Container maxWidth="xl">
+    <Toolbar disableGutters sx={{ display: "flex", alignItems: "center", pt: 1, marginBottom: '15px'}}>
 
-            {/* LOGO */}
-            <Typography
-              component={Link}
-              href="/"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                fontWeight: 800,
-                color: "white",
-                textDecoration: "none",
-                fontSize: "1.4rem",
-                mr: 3
-              }}
-            >
-              <Box sx={{
-                position: 'relative',
-                width: 50,
-                height: 50,
-                mr: 1.5,
-                borderRadius: 2,
-                overflow: 'hidden',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-              }}>
-                <Image
-                  src="/logo.png"
-                  alt="PrimeUp Clicks"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                />
-              </Box>
-              PrimeUp Clicks
-            </Typography>
+      {/* LOGO */}
+      <Typography
+        component={Link}
+        href="/"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          fontWeight: 800,
+          color: "white",
+          textDecoration: "none",
+          fontSize: "1.4rem",
+          mr: 3
+        }}
+      >
+        <Box sx={{
+          position: 'relative',
+          width: 50,
+          height: 50,
+          mr: 1.5,
+          borderRadius: 2,
+          overflow: 'hidden',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+        }}>
+          <Image
+            src="/logo.png"
+            alt="PrimeUp Clicks"
+            fill
+            style={{ objectFit: 'contain' }}
+          />
+        </Box>
+        PrimeUp Clicks
+      </Typography>
 
-            {/* NAV DESKTOP */}
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: { xs: 'none', md: 'flex' },
-                gap: 2
-              }}
-            >
-              {navItems.map((item) => (
-                <Button
-                  key={item.name}
-                  component={Link}
-                  href={item.href}
-                  sx={{
-                    color: 'white',
-                    fontSize: '0.95rem',
-                    textTransform: "none",
-                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)' }
-                  }}
-                >
-                  {item.name}
-                </Button>
-              ))}
-            </Box>
+      {/* NAV DESKTOP */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: { xs: 'none', md: 'flex' },
+          gap: 2
+        }}
+      >
+        {navItems.map((item) => (
+          <Button
+            key={item.name}
+            component={Link}
+            href={item.href}
+            sx={{
+              color: 'white',
+              fontSize: '0.95rem',
+              textTransform: "none",
+              '&:hover': { color: "#003063ff" }
+            }}
+          >
+            {item.name}
+          </Button>
+        ))}
+      </Box>
 
-            {/* AÇÕES (DESKTOP) */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+      {/* AÇÕES (DESKTOP) */}
+      <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
 
-              {/* CARRINHO */}
-              <IconButton sx={{ color: "white" }} component={Link} href="/carrinho">
-                  <ShoppingCartIcon />
-              </IconButton>
+        <IconButton sx={{ color: "white" }} component={Link} href="/carrinho">
+          <ShoppingCartIcon />
+        </IconButton>
 
-              {/* LOGIN */}
-              <Button
-                component={Link}
-                href="/login"
-                variant="outlined"
-                startIcon={<LoginIcon />}
-                sx={{
-                  color: "white",
-                  borderColor: "white",
-                  textTransform: "none",
-                  '&:hover': { background: 'rgba(255,255,255,0.2)' }
-                }}
-              >
-                Login
-              </Button>
+        {/* LOGIN */}
+        <Button
+          component={Link}
+          href="/login"
+          variant="contained"
+          startIcon={<LoginIcon />}
+          sx={{
+            color: "white",
+            borderColor: "white",
+            textTransform: "none",
+            '&:hover': { backgroundColor: "#003063ff" }
+          }}
+        >
+          Entrar
+        </Button>
 
-              {/* CADASTRAR */}
-              <Button
-                component={Link}
-                href="/register"
-                variant="contained"
-                startIcon={<PersonAddIcon />}
-                sx={{
-                  background: "#ab47bc",
-                  color: "#fff",
-                  textTransform: "none",
-                  '&:hover': { background: "#9c27b0" }
-                }}
-              >
-                Cadastrar
-              </Button>
+        {/* CADASTRAR */}
+        <Button
+          component={Link}
+          href="/register"
+          variant="contained"
+          startIcon={<PersonAddIcon />}
+          sx={{
+            background: "#0055b1ff",
+            color: "#fff",
+            textTransform: "none",
+            '&:hover': { background: "#003063ff" }
+          }}
+        >
+          Cadastrar
+        </Button>
 
-            </Box>
+      </Box>
 
-            {/* ICONE MOBILE */}
-            <IconButton
-              color="inherit"
-              edge="end"
-              onClick={handleDrawerToggle}
-              sx={{ display: { md: 'none' }, ml: 'auto' }}
-            >
-              <MenuIcon />
-            </IconButton>
+      {/* MOBILE MENU ICON */}
+      <IconButton
+        color="inherit"
+        edge="end"
+        onClick={handleDrawerToggle}
+        sx={{ display: { md: 'none' }, ml: 'auto' }}
+      >
+        <MenuIcon />
+      </IconButton>
 
-          </Toolbar>
-        </Container>
-      </AppBar>
+    </Toolbar>
+  </Container>
+</AppBar>
+
 
       {/* MENU MOBILE */}
       <Drawer anchor="right" open={mobileOpen} onClose={handleDrawerToggle}>

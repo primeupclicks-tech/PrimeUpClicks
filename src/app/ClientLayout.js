@@ -11,15 +11,16 @@ import { Box } from '@mui/material';
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#6a1b9a', light: '#8e24aa', dark: '#4a148c' },
-    secondary: { main: '#ab47bc', light: '#ce93d8', dark: '#9c27b0' },
-    background: { default: '#f5f5f5', paper: '#FFFFFF' },
+    primary: { main: '#0055b1ff', light: '#007bffff', dark: '#003063ff' },
+    secondary: { main: '#0055b1ff', light: '#007bffff', dark: '#003063ff' },
+    background: { default: '#ffff', paper: '#ffff' },
+    text: { primary: '#000000ff', secondary: '#000000ff' }
   },
   components: {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#6a1b9a',
+          background: "linear-gradient(90deg, #0055b1ff, #fff)",
         },
       },
     },
@@ -28,7 +29,8 @@ const theme = createTheme({
         body: {
           margin: 0,
           padding: 0,
-          backgroundColor: '#f5f5f5',
+          backgroundColor: '#ffffff',
+          color: '#ffffff',
         },
         html: {
           margin: 0,
@@ -53,32 +55,33 @@ export default function ClientLayout({ children }) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Providers>
-        {/* Layout principal - SEM margin/padding extra */}
         <Box sx={{ 
           display: 'flex', 
           flexDirection: 'column', 
           minHeight: '100vh',
           margin: 0,
           padding: 0,
+          backgroundColor: '#fff',
         }}>
-          {/* Header condicional */}
+          
+          {/* Header */}
           {isClient && !isAdminRoute && <Header />}
           
-          {/* Conteúdo principal - removendo padding top */}
+          {/* Conteúdo */}
           <Box 
             component="main" 
             sx={{ 
               flexGrow: 1,
-              backgroundColor: '#f5f5f5',
-              pt: 0, // Removi o padding top
-              pb: 0, // Removi o padding bottom também
+              pt: 0,
+              pb: 0,
               margin: 0,
+              backgroundColor: '#fff',
             }}
           >
             {children}
           </Box>
           
-          {/* Footer condicional */}
+          {/* Footer */}
           {isClient && !isAdminRoute && <Footer />}
         </Box>
       </Providers>

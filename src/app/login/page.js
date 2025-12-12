@@ -67,7 +67,7 @@
             sx={{
               borderRadius: 4,
               overflow: 'hidden',
-              boxShadow: '0 20px 60px rgba(106, 27, 154, 0.15)',
+              boxShadow: '0 20px 60px rgba(0, 144, 246, 0.15)',
             }}
           >
             <Grid container >
@@ -104,7 +104,7 @@
                       variant="h4"
                       sx={{
                         fontWeight: 800,
-                        background: 'linear-gradient(45deg, #6a1b9a, #8e24aa)',
+                        background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                       }}
@@ -179,7 +179,7 @@
                       <Typography
                         variant="body2"
                         sx={{
-                          color: '#6a1b9a',
+                          color: '#0055b1ff',
                           fontWeight: 600,
                           '&:hover': { textDecoration: 'underline' },
                         }}
@@ -196,14 +196,14 @@
                     size="large"
                     endIcon={<ArrowForward />}
                     sx={{
-                      background: 'linear-gradient(45deg, #6a1b9a, #8e24aa)',
+                      background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
                       py: 1.5,
                       fontSize: '1rem',
                       fontWeight: 600,
                       borderRadius: 2,
                       mb: 3,
                       '&:hover': {
-                        background: 'linear-gradient(45deg, #8e24aa, #ab47bc)',
+                        background: 'linear-gradient(135deg, #00509bff 0%, #006bdeff 50%, #00509bff 100%)',
                         transform: 'translateY(-2px)',
                       },
                       transition: 'all 0.3s ease',
@@ -243,7 +243,7 @@
                         <Typography
                           component="span"
                           sx={{
-                            color: '#6a1b9a',
+                            color: '#0055b1ff',
                             fontWeight: 700,
                             '&:hover': { textDecoration: 'underline' },
                           }}
