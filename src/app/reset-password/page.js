@@ -1,49 +1,35 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import {
-  Box,
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Paper,
-  Grid,
-  Divider,
-  IconButton,
-  InputAdornment,
-  useTheme,
-  useMediaQuery,
-  Snackbar, 
-  Alert,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText
+  Box, Container, Typography, TextField, Button, Paper,
+  Grid, InputAdornment, Snackbar, Alert, IconButton,
+  LinearProgress, List, ListItem, ListItemIcon, ListItemText
 } from '@mui/material';
 import Image from 'next/image';
 import {
   Email,
-  Lock,
+  ArrowForward,
+  Password,
   Visibility,
   VisibilityOff,
-  Google,
-  ArrowForward,
-  Person,
+  Lock,
   CheckCircle,
   Cancel
 } from '@mui/icons-material';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
-export default function RegisterPage() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+export default function ResetPassword() {
+  const [formData, setFormData] = useState({ 
+    senha: '', 
+    confirmar_senha: '' 
+  });
+  const token = useSearchParams().get('token');
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState({
     minLength: false,
@@ -53,17 +39,7 @@ export default function RegisterPage() {
     hasSpecialChar: false,
     passwordsMatch: false
   });
-
-  //dados
-  const [formData, setFormData] = useState({
-    nome_completo: '',
-    email: '',
-    senha: '',
-    confirmar_senha: ''
-  });
-
-  const router = useRouter()
-
+  const router = useRouter();
   useEffect(() => {
     const validatePassword = () => {
       const errors = {
@@ -120,65 +96,51 @@ export default function RegisterPage() {
     return Object.values(passwordErrors).every(error => error === true);
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateNome = (nome) => {
-    return nome.trim().length >= 2 && nome.trim().split(' ').length >= 2;
-  };
-
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateNome(formData.nome_completo)) {
-      setAlertMessage("Por favor, insira seu nome completo (nome e sobrenome)");
-      setOpenAlert(true);
-      return;
-    }
-
-    if (!validateEmail(formData.email)) {
-      setAlertMessage("Por favor, insira um email válido");
-      setOpenAlert(true);
-      return;
-    }
-
+    // Validação 1: As senhas coincidem
     if (formData.senha !== formData.confirmar_senha) {
-      setAlertMessage("As senhas não coincidem!");
+      setAlertMessage("As senhas não coincidem");
       setOpenAlert(true);
       return;
     }
 
+    // Validação 2: Senha forte o suficiente
     if (!isPasswordValid()) {
       setAlertMessage("A senha não atende todos os requisitos de segurança");
       setOpenAlert(true);
       return;
     }
 
+    // Validação 3: Token presente
+    if (!token) {
+      setAlertMessage("Token inválido ou expirado");
+      setOpenAlert(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
-    const usuario = { 
-      nome_completo: formData.nome_completo, 
-      email: formData.email, 
-      senha: formData.senha, 
-      confirmar_senha: formData.confirmar_senha 
+    const dados = { 
+      password: formData.senha,
+      token
     };
-
+    
     try {
-      const response = await fetch('/api/autenticacao/register', {
+      const response = await fetch('/api/autenticacao/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(usuario)
-      })
+        body: JSON.stringify(dados)
+      });
+
+      const data = await response.json();
 
       if (response.ok) {
-        const data = await response.json()
-        const id = data.id
-        router.push(`/perfil/${id}`)
+        // Sucesso - redirecionar com mensagem
+        router.push(`/login?message=Senha+redefinida+com+sucesso`);
       } else {
-        const errorData = await response.json()
-        setAlertMessage(errorData.error || "Erro ao cadastrar usuário")
+        setAlertMessage(data.error || "Erro ao redefinir senha");
         setOpenAlert(true);
       }
     } catch (error) {
@@ -187,7 +149,7 @@ export default function RegisterPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Box
@@ -206,7 +168,7 @@ export default function RegisterPage() {
           sx={{
             borderRadius: 4,
             overflow: 'hidden',
-            boxShadow: '0 20px 60px rgba(106, 27, 154, 0.15)',
+            boxShadow: '0 20px 60px rgba(0, 144, 246, 0.15)',
           }}
         >
           <Grid container>
@@ -220,7 +182,6 @@ export default function RegisterPage() {
                 justifyContent: 'center',
               }}
             >
-              {/* LOGO + TÍTULO */}
               <Box sx={{ mb: 4, textAlign: 'center' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
                   <Box
@@ -253,59 +214,12 @@ export default function RegisterPage() {
                     PrimeUp Clicks
                   </Typography>
                 </Box>
-
                 <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-                  Crie sua conta para continuar.
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  Tenha acesso às suas fotos e eventos.
+                  Informe sua nova senha
                 </Typography>
               </Box>
 
-              {/* FORMULÁRIO */}
-              <form onSubmit={handleRegister}>
-                {/* Nome Completo */}
-                <TextField
-                  fullWidth
-                  label="Nome completo"
-                  name="nome_completo"
-                  value={formData.nome_completo}
-                  onChange={handleChange}
-                  required
-                  error={formData.nome_completo.length > 0 && !validateNome(formData.nome_completo)}
-                  helperText={formData.nome_completo.length > 0 && !validateNome(formData.nome_completo) ? "Digite nome e sobrenome" : ""}
-                  sx={{ mb: 3 }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Person color="primary" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                {/* Email */}
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  error={formData.email.length > 0 && !validateEmail(formData.email)}
-                  helperText={formData.email.length > 0 && !validateEmail(formData.email) ? "Digite um email válido" : ""}
-                  sx={{ mb: 3 }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Email color="primary" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                {/* Senha */}
+              <form onSubmit={handleSubmit}>
                 <TextField
                   fullWidth
                   label="Senha"
@@ -323,7 +237,10 @@ export default function RegisterPage() {
                     ),
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <IconButton 
+                          onClick={() => setShowPassword(!showPassword)} 
+                          edge="end"
+                        >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
@@ -333,7 +250,7 @@ export default function RegisterPage() {
 
                 {/* Indicador de força da senha */}
                 {formData.senha && (
-                  <Box sx={{ mb: 2 }}>
+                  <Box sx={{ mb: 3 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                       <Typography variant="caption" color="text.secondary">
                         Força da senha:
@@ -442,7 +359,6 @@ export default function RegisterPage() {
                   </Box>
                 )}
 
-                {/* Confirmar Senha */}
                 <TextField
                   fullWidth
                   label="Confirmar Senha"
@@ -473,19 +389,6 @@ export default function RegisterPage() {
                   helperText={formData.confirmar_senha.length > 0 && !passwordErrors.passwordsMatch ? "As senhas não coincidem" : ""}
                 />
 
-                {/* Alertas */}
-                <Snackbar
-                  open={openAlert}
-                  autoHideDuration={5000}
-                  onClose={() => setOpenAlert(false)}
-                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                >
-                  <Alert onClose={() => setOpenAlert(false)} severity="error" variant="filled">
-                    {alertMessage}
-                  </Alert>
-                </Snackbar>
-
-                {/* BOTÃO CADASTRAR */}
                 <Button
                   type="submit"
                   fullWidth
@@ -511,53 +414,24 @@ export default function RegisterPage() {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  {isSubmitting ? 'Cadastrando...' : 'Criar conta'}
+                  {isSubmitting ? 'Redefinindo...' : 'Redefinir Senha'}
                 </Button>
 
-                {/* Divider */}
-                <Divider sx={{ mb: 3 }}>
-                  <Typography variant="body2" sx={{ color: 'text.secondary', px: 2 }}>
-                    Ou cadastre-se com
-                  </Typography>
-                </Divider>
-
-                {/* Google */}
-                <Box sx={{ textAlign: 'center', mb: 3 }}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<Google />}
-                    sx={{
-                      borderColor: '#db4437',
-                      color: '#db4437',
-                      px: 4,
-                      '&:hover': {
-                        borderColor: '#db4437',
-                        backgroundColor: 'rgba(219, 68, 55, 0.04)',
-                      },
-                    }}
+                <Snackbar
+                  open={openAlert}
+                  autoHideDuration={5000}
+                  onClose={() => setOpenAlert(false)}
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
+                  <Alert 
+                    onClose={() => setOpenAlert(false)} 
+                    severity="error" 
+                    variant="filled"
+                    sx={{ width: '100%' }}
                   >
-                    GOOGLE
-                  </Button>
-                </Box>
-
-                {/* Link para login */}
-                <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Já tem uma conta?{' '}
-                    <Link href="/login" style={{ textDecoration: 'none' }}>
-                      <Typography
-                        component="span"
-                        sx={{
-                          color: '#0055b1ff',
-                          fontWeight: 700,
-                          '&:hover': { textDecoration: 'underline' },
-                        }}
-                      >
-                        Entre aqui
-                      </Typography>
-                    </Link>
-                  </Typography>
-                </Box>
+                    {alertMessage}
+                  </Alert>
+                </Snackbar>
               </form>
             </Grid>
           </Grid>

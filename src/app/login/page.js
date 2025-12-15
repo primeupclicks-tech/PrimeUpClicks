@@ -20,6 +20,8 @@ export default function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -30,6 +32,18 @@ export default function LoginForm() {
     }
   }, [status, session, router]);
 
+  // Validação em tempo real do formulário
+  useEffect(() => {
+    const validateForm = () => {
+      const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+      const passwordValid = formData.password.length >= 6; // Mínimo 6 caracteres para login
+      
+      setIsFormValid(emailValid && passwordValid);
+    };
+
+    validateForm();
+  }, [formData.email, formData.password]);
+
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
@@ -39,6 +53,15 @@ export default function LoginForm() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    if (!isFormValid) {
+      setAlertMessage("Por favor, preencha todos os campos corretamente.");
+      setOpenAlert(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const res = await signIn("credentials", {
         redirect: false,
@@ -61,6 +84,8 @@ export default function LoginForm() {
     } catch (error) {
       setAlertMessage("Erro ao conectar ao servidor.");
       setOpenAlert(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -89,7 +114,6 @@ export default function LoginForm() {
             <Grid
               item
               xs={12}
-              md={6}
               sx={{
                 p: { xs: 4, md: 6 },
                 display: 'flex',
@@ -145,6 +169,8 @@ export default function LoginForm() {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  error={formData.email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)}
+                  helperText={formData.email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ? "Digite um email válido" : ""}
                   sx={{ mb: 3 }}
                   InputProps={{
                     startAdornment: (
@@ -163,6 +189,8 @@ export default function LoginForm() {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  error={formData.password.length > 0 && formData.password.length < 6}
+                  helperText={formData.password.length > 0 && formData.password.length < 6 ? "Mínimo 6 caracteres" : ""}
                   sx={{ mb: 2 }}
                   InputProps={{
                     startAdornment: (
@@ -182,14 +210,14 @@ export default function LoginForm() {
 
                 <Snackbar
                   open={openAlert}
-                  autoHideDuration={3000}
+                  autoHideDuration={5000}
                   onClose={() => setOpenAlert(false)}
                   anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                 >
-                 <Alert onClose={() => setOpenAlert(false)} severity="error" variant="filled">
+                >
+                  <Alert onClose={() => setOpenAlert(false)} severity="error" variant="filled">
                     {alertMessage}
                   </Alert>
-                  </Snackbar>
+                </Snackbar>
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <FormControlLabel
@@ -216,27 +244,39 @@ export default function LoginForm() {
                   </Link>
                 </Box>
 
+                {/* BOTÃO COM VALIDAÇÃO - Igual ao do registro */}
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   size="large"
-                  endIcon={<ArrowForward />}
+                  disabled={isSubmitting || !isFormValid}
+                  endIcon={isSubmitting ? null : <ArrowForward />}
                   sx={{
-                    background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
+                    background: isFormValid && !isSubmitting 
+                      ? 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)'
+                      : '#e0e0e0',
+                    color: isFormValid && !isSubmitting ? 'white' : '#9e9e9e',
                     py: 1.5,
                     fontSize: '1rem',
                     fontWeight: 600,
                     borderRadius: 2,
                     mb: 3,
-                    '&:hover': {
+                    '&:hover': isFormValid && !isSubmitting ? {
                       background: 'linear-gradient(135deg, #00509bff 0%, #006bdeff 50%, #00509bff 100%)',
                       transform: 'translateY(-2px)',
+                    } : {
+                      background: '#e0e0e0',
+                      cursor: 'not-allowed'
+                    },
+                    '&:disabled': {
+                      background: '#e0e0e0',
+                      color: '#9e9e9e',
                     },
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  Entrar  
+                  {isSubmitting ? 'Entrando...' : 'Entrar'}
                 </Button>
 
                 <Divider sx={{ mb: 3 }}>
@@ -246,7 +286,6 @@ export default function LoginForm() {
                 </Divider>
 
                 <Box sx={{ textAlign: 'center', mb: 3 }}>
-                  <Box sx={{ textAlign: 'center', mb: 3 }}>
                   <Button
                     variant="outlined"
                     startIcon={<Google />}
@@ -262,8 +301,6 @@ export default function LoginForm() {
                   >
                     GOOGLE
                   </Button>
-                </Box>
-
                 </Box>
 
                 <Box sx={{ textAlign: 'center' }}>
