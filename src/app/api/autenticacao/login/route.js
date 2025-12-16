@@ -7,7 +7,7 @@ export async function POST(request) {
     const { email, senha } = await request.json()
 
     const result = await pool.query(
-      'SELECT id, nome, senha FROM usuario WHERE email = $1',
+      'SELECT id, nome, senha, email_verificado FROM usuario WHERE email = $1',
       [email]
     )
 
@@ -28,6 +28,13 @@ export async function POST(request) {
         { status: 401 }
       )
     }
+
+    if (!user.email_verificado) {
+  return NextResponse.json(
+    { error: 'Por favor, verifique seu email antes de fazer login' },
+    { status: 403 }
+  )
+}
 
     return NextResponse.json(
       { id: user.id, nome: user.nome },

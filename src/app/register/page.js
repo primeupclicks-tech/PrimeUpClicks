@@ -13,8 +13,6 @@ import {
   Divider,
   IconButton,
   InputAdornment,
-  useTheme,
-  useMediaQuery,
   Snackbar, 
   Alert,
   LinearProgress,
@@ -38,8 +36,6 @@ import {
 import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
@@ -54,7 +50,7 @@ export default function RegisterPage() {
     passwordsMatch: false
   });
 
-  //dados
+  // Dados do formulário
   const [formData, setFormData] = useState({
     nome_completo: '',
     email: '',
@@ -62,8 +58,9 @@ export default function RegisterPage() {
     confirmar_senha: ''
   });
 
-  const router = useRouter()
+  const router = useRouter();
 
+  // Validação em tempo real da senha
   useEffect(() => {
     const validatePassword = () => {
       const errors = {
@@ -79,6 +76,20 @@ export default function RegisterPage() {
 
     validatePassword();
   }, [formData.senha, formData.confirmar_senha]);
+
+  // Validações
+  const isPasswordValid = () => {
+    return Object.values(passwordErrors).every(error => error === true);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateNome = (nome) => {
+    return nome.trim().length >= 2 && nome.trim().split(' ').length >= 2;
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -116,40 +127,39 @@ export default function RegisterPage() {
     return 'Excelente';
   };
 
-  const isPasswordValid = () => {
-    return Object.values(passwordErrors).every(error => error === true);
-  };
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateNome = (nome) => {
-    return nome.trim().length >= 2 && nome.trim().split(' ').length >= 2;
+  const isFormValid = () => {
+    return (
+      validateNome(formData.nome_completo) &&
+      validateEmail(formData.email) &&
+      isPasswordValid()
+    );
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     
+    // Validação 1: Nome completo
     if (!validateNome(formData.nome_completo)) {
       setAlertMessage("Por favor, insira seu nome completo (nome e sobrenome)");
       setOpenAlert(true);
       return;
     }
 
+    // Validação 2: Email válido
     if (!validateEmail(formData.email)) {
       setAlertMessage("Por favor, insira um email válido");
       setOpenAlert(true);
       return;
     }
 
+    // Validação 3: Senhas coincidem
     if (formData.senha !== formData.confirmar_senha) {
       setAlertMessage("As senhas não coincidem!");
       setOpenAlert(true);
       return;
     }
 
+    // Validação 4: Senha forte
     if (!isPasswordValid()) {
       setAlertMessage("A senha não atende todos os requisitos de segurança");
       setOpenAlert(true);
@@ -161,8 +171,7 @@ export default function RegisterPage() {
     const usuario = { 
       nome_completo: formData.nome_completo, 
       email: formData.email, 
-      senha: formData.senha, 
-      confirmar_senha: formData.confirmar_senha 
+      senha: formData.senha
     };
 
     try {
@@ -170,15 +179,15 @@ export default function RegisterPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(usuario)
-      })
+      });
+
+      const data = await response.json();
 
       if (response.ok) {
-        const data = await response.json()
-        const id = data.id
-        router.push(`/perfil/${id}`)
+        // Redirecionar para página de verificação com o ID do usuário
+        router.push(`/verificar-email?usuario_id=${data.usuario_id}`);
       } else {
-        const errorData = await response.json()
-        setAlertMessage(errorData.error || "Erro ao cadastrar usuário")
+        setAlertMessage(data.error || "Erro ao cadastrar usuário");
         setOpenAlert(true);
       }
     } catch (error) {
@@ -187,7 +196,7 @@ export default function RegisterPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Box
@@ -258,7 +267,7 @@ export default function RegisterPage() {
                   Crie sua conta para continuar.
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  Tenha acesso às suas fotos e eventos.
+                  Com uma conta você pode comprar ou vender fotos.
                 </Typography>
               </Box>
 
@@ -491,18 +500,24 @@ export default function RegisterPage() {
                   fullWidth
                   variant="contained"
                   size="large"
-                  disabled={isSubmitting || !isPasswordValid()}
+                  disabled={isSubmitting || !isFormValid()}
                   endIcon={isSubmitting ? null : <ArrowForward />}
                   sx={{
-                    background: 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)',
+                    background: isFormValid() && !isSubmitting 
+                      ? 'linear-gradient(135deg, #00315fff 0%, #0055b1ff 50%, #00315fff 100%)'
+                      : '#e0e0e0',
+                    color: isFormValid() && !isSubmitting ? 'white' : '#9e9e9e',
                     py: 1.5,
                     fontSize: '1rem',
                     fontWeight: 600,
                     borderRadius: 2,
                     mb: 3,
-                    '&:hover': {
+                    '&:hover': isFormValid() && !isSubmitting ? {
                       background: 'linear-gradient(135deg, #00509bff 0%, #006bdeff 50%, #00509bff 100%)',
                       transform: 'translateY(-2px)',
+                    } : {
+                      background: '#e0e0e0',
+                      cursor: 'not-allowed'
                     },
                     '&:disabled': {
                       background: '#e0e0e0',

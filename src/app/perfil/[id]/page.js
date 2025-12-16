@@ -5,8 +5,7 @@ import ClienteView from "./ClienteView";
 import { redirect } from "next/navigation";
 
 export default async function PerfilPage({ params }) {
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
+  const { id } = await params;
 
   const session = await getServerSession(authOptions);
 
@@ -32,5 +31,10 @@ export default async function PerfilPage({ params }) {
 
   const usuario = result.rows[0];
 
-  return <ClienteView usuario={usuario} />;
+if (!session.user.email_verificado) {
+  redirect(`/verificar-email?usuario_id=${usuario.id}`);
+}
+
+
+return <ClienteView usuario={usuario} />; 
 }
