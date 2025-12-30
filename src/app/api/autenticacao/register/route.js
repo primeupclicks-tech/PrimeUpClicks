@@ -65,42 +65,56 @@ export async function POST(req) {
         )
 
     // Enviar email com código
-    await resend.emails.send({
-      from: 'PrimeUp <onboarding@resend.dev>',
-      to: email,
-      subject: 'Verifique seu email - PrimeUp Clicks',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #00315f;">Bem-vindo ao PrimeUp Clicks, ${nome_completo}!</h2>
-          <p>Seu cadastro foi realizado com sucesso.</p>
-          <p>Para ativar sua conta, use o código abaixo:</p>
-          
-          <div style="
-            background: linear-gradient(135deg, #00315fff 0%, #0055b1ff 100%);
-            color: white;
-            font-size: 32px;
-            font-weight: bold;
-            letter-spacing: 10px;
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 30px 0;
-            font-family: monospace;
-          ">
-            ${codigo}
-          </div>
-          
-          <p>Você será redirecionado para uma página onde poderá inserir este código.</p>
-          <p><strong>Este código expira em 15 minutos.</strong></p>
-          <p>Se você não se cadastrou, ignore este email.</p>
-          
-          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-          <p style="color: #666; font-size: 12px;">
-            PrimeUp Clicks &copy; ${new Date().getFullYear()}
-          </p>
-        </div>
-      `,
-    })
+    const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/verificar-email?usuario_id=${usuario.id}`
+
+await resend.emails.send({
+  from: 'PrimeUp <onboarding@resend.dev>',
+  to: email,
+  subject: 'Verifique seu email - PrimeUp Clicks',
+  html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #00315f;">Bem-vindo ao PrimeUp Clicks, ${nome_completo}!</h2>
+
+      <p>Seu cadastro foi realizado com sucesso.</p>
+      <p>Para ativar sua conta, insira o código abaixo:</p>
+
+      <div style="
+        background: linear-gradient(135deg, #00315fff 0%, #0055b1ff 100%);
+        color: white;
+        font-size: 32px;
+        font-weight: bold;
+        letter-spacing: 10px;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 30px 0;
+        font-family: monospace;
+      ">
+        ${codigo}
+      </div>
+
+      <h3>👉 ou clicar no link abaixo para abrir a página de verificação:</h3>
+
+      <a href="${verificationUrl}"
+        style="display:inline-block;padding:12px 18px;
+        background:#0055b1;color:#fff;border-radius:8px;
+        text-decoration:none;font-weight:700">
+        Verificar email
+      </a>
+
+      <p style="margin-top:10px">${verificationUrl}</p>
+
+      <p><strong>Este código expira em 15 minutos.</strong></p>
+      <p>Se você não se cadastrou, ignore este email.</p>
+
+      <hr style="border:none;border-top:1px solid #eee;margin:20px 0;">
+      <p style="color:#666;font-size:12px;">
+        PrimeUp Clicks &copy; ${new Date().getFullYear()}
+      </p>
+    </div>
+  `,
+})
+
 
     return NextResponse.json({ 
       success: true,
