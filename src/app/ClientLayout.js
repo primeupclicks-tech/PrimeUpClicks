@@ -15,74 +15,52 @@ const theme = createTheme({
     secondary: { main: '#0055b1ff', light: '#007bffff', dark: '#003063ff' },
     background: { default: '#ffff', paper: '#ffff' },
     text: { primary: '#000000ff', secondary: '#000000ff' }
-  },
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          background: "linear-gradient(90deg, #0055b1ff, #fff)",
-        },
-      },
-    },
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          margin: 0,
-          padding: 0,
-          backgroundColor: '#ffffff',
-          color: '#ffffff',
-        },
-        html: {
-          margin: 0,
-          padding: 0,
-        },
-      },
-    },
-  },
+  }
 });
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
-  
+
+  const [mounted, setMounted] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
+
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
+
+    const token = localStorage.getItem('auth_token');
+    setIsLogged(!!token);
   }, []);
-  
-  const isAdminRoute = pathname?.startsWith('/admin');
+
+  // ⚠️ IMPORTANTE: só calcula após mount (cliente)
+  if (!mounted) {
+    // Renderiza markup neutro idêntico no SSR e cliente
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Providers>
+          <Box component="main">{children}</Box>
+        </Providers>
+      </ThemeProvider>
+    );
+  }
+
+  const isInternalRoute =
+    pathname?.startsWith('/perfil');
+
+  const hideLayout = isInternalRoute || isLogged;
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Providers>
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          minHeight: '100vh',
-          margin: 0,
-          padding: 0,
-          backgroundColor: '#fff',
-        }}>
-          
-          {/* Header */}
-          {isClient && !isAdminRoute && <Header />}
-          
-          {/* Conteúdo */}
-          <Box 
-            component="main" 
-            sx={{ 
-              flexGrow: 1,
-              pt: 0,
-              pb: 0,
-              margin: 0,
-              backgroundColor: '#fff',
-            }}
-          >
+        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {!hideLayout && <Header />}
+
+          <Box component="main" sx={{ flexGrow: 1 }}>
             {children}
           </Box>
-          
-          {/* Footer */}
-          {isClient && !isAdminRoute && <Footer />}
+
+          {!hideLayout && <Footer />}
         </Box>
       </Providers>
     </ThemeProvider>
